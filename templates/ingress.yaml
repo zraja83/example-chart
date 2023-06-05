@@ -1,0 +1,36 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "example-chart.fullname" . }}
+  labels:
+    app: {{ include "example-chart.name" . }}
+  annotations:
+    {{- range $key, $value := .Values.ingress.annotations }}
+    {{ $key }}: {{ $value }}
+    {{- end }}
+spec:
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ . }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "example-chart.fullname" . }}
+                port:
+                  number: {{ $.Values.service.port }}
+          {{- end }}
+    {{- end }}
+  tls:
+    {{- with .Values.ingress.tls }}
+    - hosts:
+        {{- range . }}
+        - {{ .host }}
+        {{- end }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+    {{- end }}
+{{- end }}
