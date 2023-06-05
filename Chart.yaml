@@ -1,0 +1,7 @@
+apiVersion: v2
+name: example-chart
+version: 0.1.0
+description: An example Helm chart for demonstration purposes
+maintainers:
+  - name: Your Name
+    email: your@email.com
